@@ -91,13 +91,10 @@
                                 IsOn="{x:Bind ViewModel.PlayNotificationSounds, Mode=TwoWay}"/>
 
                     <ComboBox Header="Notification Sound"
+                            ItemsSource="{x:Bind ViewModel.AvailableSounds}"
                             SelectedValue="{x:Bind ViewModel.SelectedSound, Mode=TwoWay}"
                             IsEnabled="{x:Bind ViewModel.PlayNotificationSounds, Mode=OneWay}"
-                            MinWidth="200">
-                        <ComboBoxItem Content="Default"/>
-                        <ComboBoxItem Content="Chime"/>
-                        <ComboBoxItem Content="Bell"/>
-                    </ComboBox>
+                            MinWidth="200"/>
 
                     <ToggleSwitch Header="Show Toast Notifications"
                                 IsOn="{x:Bind ViewModel.ShowToastNotifications, Mode=TwoWay}"/>

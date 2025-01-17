@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DeepFocus.Services;
@@ -42,11 +43,16 @@ namespace DeepFocus.ViewModels
         [ObservableProperty]
         private bool autoStartNextPomodoro;
 
+        public ObservableCollection<string> AvailableSounds { get; }
+
         public SettingsViewModel(ISettingsService settingsService, INotificationService notificationService)
         {
             _settingsService = settingsService;
             _notificationService = notificationService;
             Title = "Settings";
+
+            // Initialize available sounds
+            AvailableSounds = new ObservableCollection<string>(_notificationService.GetAvailableSounds());
         }
 
         public override void Initialize()
@@ -71,6 +77,12 @@ namespace DeepFocus.ViewModels
             ShowToastNotifications = _settingsService.ShowToastNotifications;
             AutoStartBreaks = _settingsService.AutoStartBreaks;
             AutoStartNextPomodoro = _settingsService.AutoStartNextPomodoro;
+
+            // Ensure selected sound is valid
+            if (!AvailableSounds.Contains(SelectedSound))
+            {
+                SelectedSound = AvailableSounds[0];
+            }
         }
 
         [RelayCommand]
@@ -114,7 +126,7 @@ namespace DeepFocus.ViewModels
             LongBreakDuration = 15;
             CyclesBeforeLongBreak = 4;
             PlayNotificationSounds = true;
-            SelectedSound = "Default";
+            SelectedSound = AvailableSounds[0];
             ShowToastNotifications = true;
             AutoStartBreaks = false;
             AutoStartNextPomodoro = false;

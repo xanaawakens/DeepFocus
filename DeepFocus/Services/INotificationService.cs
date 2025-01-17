@@ -4,5 +4,6 @@ namespace DeepFocus.Services
     {
         void ShowNotification(string title, string message);
         void PlaySound(string soundName);
+        string[] GetAvailableSounds();
     }
 }
