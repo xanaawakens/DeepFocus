@@ -57,9 +57,9 @@ namespace DeepFocus.ViewModels
         [RelayCommand(CanExecute = nameof(CanStart))]
         private void Start()
         {
-            if (currentSession == null)
+            if (CurrentSession == null)
             {
-                currentSession = new PomodoroSession(_settingsService.FocusDuration, SessionType.Focus);
+                CurrentSession = new PomodoroSession(_settingsService.FocusDuration, SessionType.Focus);
             }
             _timerService.Start();
             IsRunning = true;
@@ -81,7 +81,7 @@ namespace DeepFocus.ViewModels
         {
             _timerService.Reset();
             IsRunning = false;
-            currentSession = null;
+            CurrentSession = null;
             TimeDisplay = $"{_settingsService.FocusDuration}:00";
             Progress = 0;
         }
@@ -89,19 +89,19 @@ namespace DeepFocus.ViewModels
         private void OnTimerTick(object? sender, TimeSpan remaining)
         {
             TimeDisplay = $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
-            if (currentSession != null)
+            if (CurrentSession != null)
             {
-                var elapsed = TimeSpan.FromMinutes(currentSession.Duration) - remaining;
-                Progress = elapsed.TotalSeconds / (currentSession.Duration * 60);
+                var elapsed = TimeSpan.FromMinutes(CurrentSession.Duration) - remaining;
+                Progress = elapsed.TotalSeconds / (CurrentSession.Duration * 60);
             }
         }
 
         private void OnTimerCompleted(object? sender, EventArgs e)
         {
-            if (currentSession != null)
+            if (CurrentSession != null)
             {
-                currentSession.IsCompleted = true;
-                currentSession.EndTime = DateTime.Now;
+                CurrentSession.IsCompleted = true;
+                CurrentSession.EndTime = DateTime.Now;
             }
             _notificationService.ShowNotification("Time's up!", "Take a break!");
             Progress = 1.0;
