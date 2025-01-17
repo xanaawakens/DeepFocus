@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 

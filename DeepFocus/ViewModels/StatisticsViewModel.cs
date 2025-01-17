@@ -12,17 +12,34 @@ namespace DeepFocus.ViewModels
     {
         private readonly IStatisticsService _statisticsService;
 
-        [ObservableProperty]
-        private StatisticsSummary? summary;
+        private bool _isLoading;
+        private StatisticsSummary? _summary;
+        private WeeklyStatistics? _weeklyStats;
+        private ObservableCollection<DailyStatistics> _dailyStats = new();
 
-        [ObservableProperty]
-        private WeeklyStatistics? weeklyStats;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            private set => SetProperty(ref _isLoading, value);
+        }
 
-        [ObservableProperty]
-        private ObservableCollection<DailyStatistics> dailyStats = new();
+        public StatisticsSummary? Summary
+        {
+            get => _summary;
+            private set => SetProperty(ref _summary, value);
+        }
 
-        [ObservableProperty]
-        private bool isLoading;
+        public WeeklyStatistics? WeeklyStats
+        {
+            get => _weeklyStats;
+            private set => SetProperty(ref _weeklyStats, value);
+        }
+
+        public ObservableCollection<DailyStatistics> DailyStats
+        {
+            get => _dailyStats;
+            private set => SetProperty(ref _dailyStats, value);
+        }
 
         public StatisticsViewModel(IStatisticsService statisticsService)
         {
@@ -36,7 +53,7 @@ namespace DeepFocus.ViewModels
             base.Initialize();
         }
 
-        private async Task LoadStatisticsAsync()
+        public async Task LoadStatisticsAsync()
         {
             try
             {
@@ -45,7 +62,7 @@ namespace DeepFocus.ViewModels
                 // Get current week's statistics
                 var today = DateTime.Today;
                 var weekStart = today.AddDays(-(int)today.DayOfWeek);
-                weeklyStats = await _statisticsService.GetWeeklyStatisticsAsync(weekStart);
+                WeeklyStats = await _statisticsService.GetWeeklyStatisticsAsync(weekStart);
 
                 // Get daily statistics for the last 7 days
                 var dailyStatsList = await _statisticsService.GetDailyStatisticsAsync(
@@ -58,7 +75,7 @@ namespace DeepFocus.ViewModels
                 }
 
                 // Get overall summary
-                summary = await _statisticsService.GetStatisticsSummaryAsync();
+                Summary = await _statisticsService.GetStatisticsSummaryAsync();
             }
             catch (Exception ex)
             {

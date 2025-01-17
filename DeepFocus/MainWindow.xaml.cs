@@ -28,8 +28,13 @@ namespace DeepFocus
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private const int DefaultWidth = 800;
+        private const int DefaultHeight = 600;
+        private const int MinWidth = 400;
+        private const int MinHeight = 300;
+
         private readonly INavigationService _navigationService;
-        private readonly AppWindow _appWindow;
+        private readonly AppWindow? _appWindow;
         public MainViewModel ViewModel { get; }
 
         public MainWindow()
@@ -45,15 +50,20 @@ namespace DeepFocus
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
-            // Set initial size
-            _appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 1000, Height = 600 });
+            // Set window size and constraints
+            if (_appWindow != null)
+            {
+                var size = new Windows.Graphics.SizeInt32(DefaultWidth, DefaultHeight);
+                _appWindow.Resize(size);
 
-            // Set minimum size
-            var presenter = _appWindow.Presenter as OverlappedPresenter;
-            presenter.IsResizable = true;
-            presenter.IsMaximizable = true;
-            presenter.IsMinimizable = true;
-            presenter.SetMinSize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 400 });
+                var presenter = _appWindow.Presenter as OverlappedPresenter;
+                if (presenter != null)
+                {
+                    presenter.IsResizable = true;
+                    presenter.IsMaximizable = true;
+                    presenter.IsMinimizable = true;
+                }
+            }
 
             // Get navigation service and set up frame
             _navigationService = App.Current.Services.GetService(typeof(INavigationService)) as INavigationService

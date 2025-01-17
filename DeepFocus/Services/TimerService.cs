@@ -29,7 +29,7 @@ namespace DeepFocus.Services
             {
                 // Adjust remaining time based on pause duration
                 var pauseDuration = DateTime.Now - _pauseTime;
-                _remaining = _remaining;
+                _remaining = _remaining - pauseDuration; // Fix self-assignment
                 _isPaused = false;
             }
             _timer.Start();

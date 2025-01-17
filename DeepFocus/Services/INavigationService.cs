@@ -1,16 +1,15 @@
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using System;
+using Microsoft.UI.Xaml.Controls;
 
 namespace DeepFocus.Services
 {
     public interface INavigationService
     {
-        event NavigatedEventHandler Navigated;
+        Frame? Frame { get; set; }
         bool CanGoBack { get; }
-        Frame Frame { get; set; }
-
-        bool NavigateTo(string pageKey, object parameter = null);
+        event EventHandler<string>? Navigated;
         bool GoBack();
+        void RegisterPage(string key, Type pageType);
+        bool NavigateTo(string pageKey, object? parameter = null);
     }
 }

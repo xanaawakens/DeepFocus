@@ -23,6 +23,9 @@ namespace DeepFocus.ViewModels
         private string cycleDisplay = "Pomodoro 1/4";
 
         [ObservableProperty]
+        private double progress;
+
+        [ObservableProperty]
         private PomodoroSession? currentSession;
 
         public MainViewModel(
@@ -46,12 +49,13 @@ namespace DeepFocus.ViewModels
             // Load settings and update display
             _settingsService.LoadSettings();
             TimeDisplay = $"{_settingsService.FocusDuration}:00";
+            Progress = 0;
             
             base.Initialize();
         }
 
-        [RelayCommand]
-        private void StartTimer()
+        [RelayCommand(CanExecute = nameof(CanStart))]
+        private void Start()
         {
             if (currentSession == null)
             {
@@ -61,25 +65,35 @@ namespace DeepFocus.ViewModels
             IsRunning = true;
         }
 
-        [RelayCommand]
-        private void PauseTimer()
+        private bool CanStart() => !IsRunning;
+
+        [RelayCommand(CanExecute = nameof(CanPause))]
+        private void Pause()
         {
             _timerService.Pause();
             IsRunning = false;
         }
 
+        private bool CanPause() => IsRunning;
+
         [RelayCommand]
-        private void ResetTimer()
+        private void Reset()
         {
             _timerService.Reset();
             IsRunning = false;
             currentSession = null;
             TimeDisplay = $"{_settingsService.FocusDuration}:00";
+            Progress = 0;
         }
 
         private void OnTimerTick(object? sender, TimeSpan remaining)
         {
             TimeDisplay = $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
+            if (currentSession != null)
+            {
+                var elapsed = TimeSpan.FromMinutes(currentSession.Duration) - remaining;
+                Progress = elapsed.TotalSeconds / (currentSession.Duration * 60);
+            }
         }
 
         private void OnTimerCompleted(object? sender, EventArgs e)
@@ -90,6 +104,8 @@ namespace DeepFocus.ViewModels
                 currentSession.EndTime = DateTime.Now;
             }
             _notificationService.ShowNotification("Time's up!", "Take a break!");
+            Progress = 1.0;
+            IsRunning = false;
         }
     }
 }
