@@ -22,10 +22,12 @@ namespace DeepFocus.Helpers
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IStatisticsService, StatisticsService>();
+            services.AddSingleton<INavigationService, NavigationService>();
 
             // Register ViewModels
             services.AddTransient<MainViewModel>();
             services.AddTransient<StatisticsViewModel>();
+            services.AddTransient<SettingsViewModel>();
 
             return services;
         }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DeepFocus.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
+            <!-- Timer Display -->
+            <TextBlock Text="{x:Bind ViewModel.TimeDisplay, Mode=OneWay}"
+                     Style="{ThemeResource DisplayLargeTextBlockStyle}"
+                     HorizontalAlignment="Center"/>
+
+            <!-- Session Type -->
+            <TextBlock Text="{x:Bind ViewModel.SessionTypeDisplay, Mode=OneWay}"
+                     Style="{ThemeResource SubtitleTextBlockStyle}"
+                     HorizontalAlignment="Center"/>
+
+            <!-- Progress Ring -->
+            <ProgressRing Value="{x:Bind ViewModel.Progress, Mode=OneWay}"
+                         IsIndeterminate="False"
+                         Width="200"
+                         Height="200"/>
+
+            <!-- Control Buttons -->
+            <StackPanel Orientation="Horizontal" 
+                      HorizontalAlignment="Center"
+                      Spacing="8">
+                <Button Command="{x:Bind ViewModel.StartCommand}"
+                        Style="{ThemeResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE768;"/>
+                        <TextBlock Text="Start"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{x:Bind ViewModel.PauseCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE769;"/>
+                        <TextBlock Text="Pause"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{x:Bind ViewModel.ResetCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE72C;"/>
+                        <TextBlock Text="Reset"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- Session Progress -->
+            <TextBlock Text="{x:Bind ViewModel.SessionProgress, Mode=OneWay}"
+                     Style="{ThemeResource BodyTextBlockStyle}"
+                     HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>
