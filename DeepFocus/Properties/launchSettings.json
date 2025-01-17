@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeepFocus (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "DeepFocus (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
