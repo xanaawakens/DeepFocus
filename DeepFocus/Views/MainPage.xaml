@@ -6,7 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:DeepFocus.ViewModels"
+    xmlns:converters="using:DeepFocus.Converters"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+    </Page.Resources>
 
     <Grid Padding="24">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
@@ -53,8 +58,8 @@
                 </Button>
             </StackPanel>
 
-            <!-- Session Progress -->
-            <TextBlock Text="{x:Bind ViewModel.SessionProgress, Mode=OneWay}"
+            <!-- Progress Text -->
+            <TextBlock Text="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:P0}'}"
                      Style="{ThemeResource BodyTextBlockStyle}"
                      HorizontalAlignment="Center"/>
         </StackPanel>
