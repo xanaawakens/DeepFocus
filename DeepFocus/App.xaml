@@ -16,6 +16,7 @@
 
             <!-- Converters -->
             <converters:PercentageConverter x:Key="PercentageConverter"/>
+            <converters:StringFormatConverter x:Key="StringFormatConverter"/>
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>

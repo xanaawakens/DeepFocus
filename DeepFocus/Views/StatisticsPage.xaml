@@ -41,7 +41,7 @@
                     <TextBlock Text="Total Pomodoros"
                              Style="{ThemeResource CaptionTextBlockStyle}"
                              Foreground="{ThemeResource TextSecondaryBrush}"/>
-                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalPomodoros, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalPomodoros, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}'}"
                              Style="{ThemeResource TitleLargeTextBlockStyle}"
                              Margin="0,4,0,0"/>
                 </StackPanel>
@@ -58,7 +58,7 @@
                     <TextBlock Text="Total Hours Focused"
                              Style="{ThemeResource CaptionTextBlockStyle}"
                              Foreground="{ThemeResource TextSecondaryBrush}"/>
-                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalMinutesFocused, Mode=OneWay, Converter={StaticResource MinutesToHoursConverter}}"
+                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalMinutesFocused, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0} hours'}"
                              Style="{ThemeResource TitleLargeTextBlockStyle}"
                              Margin="0,4,0,0"/>
                 </StackPanel>
@@ -75,12 +75,9 @@
                     <TextBlock Text="Current Streak"
                              Style="{ThemeResource CaptionTextBlockStyle}"
                              Foreground="{ThemeResource TextSecondaryBrush}"/>
-                    <TextBlock Text="{x:Bind ViewModel.Summary.CurrentStreak, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind ViewModel.Summary.CurrentStreak, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0} days'}"
                              Style="{ThemeResource TitleLargeTextBlockStyle}"
                              Margin="0,4,0,0"/>
-                    <TextBlock Text="days"
-                             Style="{ThemeResource CaptionTextBlockStyle}"
-                             Foreground="{ThemeResource TextSecondaryBrush}"/>
                 </StackPanel>
             </Grid>
 
@@ -98,7 +95,7 @@
                     <TextBlock Text="{x:Bind ViewModel.Summary.MostProductiveDay, Mode=OneWay, Converter={StaticResource DateToShortDateConverter}}"
                              Style="{ThemeResource TitleLargeTextBlockStyle}"
                              Margin="0,4,0,0"/>
-                    <TextBlock Text="{x:Bind ViewModel.Summary.MostPomodorosInDay, Mode=OneWay, StringFormat='{}{0} pomodoros'}"
+                    <TextBlock Text="{x:Bind ViewModel.Summary.MostPomodorosInDay, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0} pomodoros'}"
                              Style="{ThemeResource CaptionTextBlockStyle}"
                              Foreground="{ThemeResource TextSecondaryBrush}"/>
                 </StackPanel>
@@ -148,9 +145,9 @@
                                  Style="{ThemeResource BodyTextBlockStyle}"/>
                         
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
-                            <TextBlock Text="{x:Bind CompletedPomodoros, StringFormat='{}{0} pomodoros'}"
+                            <TextBlock Text="{x:Bind CompletedPomodoros, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0} pomodoros'}"
                                      Style="{ThemeResource BodyTextBlockStyle}"/>
-                            <TextBlock Text="{x:Bind TotalMinutesFocused, StringFormat='{}{0} minutes'}"
+                            <TextBlock Text="{x:Bind TotalMinutesFocused, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0} hours'}"
                                      Style="{ThemeResource BodyTextBlockStyle}"
                                      Foreground="{ThemeResource TextSecondaryBrush}"/>
                         </StackPanel>
