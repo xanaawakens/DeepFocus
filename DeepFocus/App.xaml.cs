@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +15,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Extensions.DependencyInjection;
+using DeepFocus.Helpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,6 +28,13 @@ namespace DeepFocus
     /// </summary>
     public partial class App : Application
     {
+        private Window? m_window;
+        private IServiceProvider? _serviceProvider;
+
+        public IServiceProvider Services => _serviceProvider ?? throw new InvalidOperationException("Services not initialized");
+
+        public new static App Current => (App)Application.Current;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -33,6 +42,16 @@ namespace DeepFocus
         public App()
         {
             this.InitializeComponent();
+            
+            // Configure services
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            _serviceProvider = services.BuildServiceProvider();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDeepFocusServices();
         }
 
         /// <summary>
@@ -44,7 +63,5 @@ namespace DeepFocus
             m_window = new MainWindow();
             m_window.Activate();
         }
-
-        private Window? m_window;
     }
 }

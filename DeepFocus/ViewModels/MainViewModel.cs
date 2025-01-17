@@ -7,7 +7,7 @@ using DeepFocus.Services;
 
 namespace DeepFocus.ViewModels
 {
-    public partial class MainViewModel : ObservableObject
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly ITimerService _timerService;
         private readonly ISettingsService _settingsService;
@@ -34,8 +34,20 @@ namespace DeepFocus.ViewModels
             _settingsService = settingsService;
             _notificationService = notificationService;
 
+            Title = "Timer";
+            Initialize();
+        }
+
+        public override void Initialize()
+        {
             _timerService.TimerTick += OnTimerTick;
             _timerService.TimerCompleted += OnTimerCompleted;
+            
+            // Load settings and update display
+            _settingsService.LoadSettings();
+            TimeDisplay = $"{_settingsService.FocusDuration}:00";
+            
+            base.Initialize();
         }
 
         [RelayCommand]
