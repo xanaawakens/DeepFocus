@@ -1,3 +1,4 @@
+using System;
 using Microsoft.UI.Xaml.Controls;
 using DeepFocus.ViewModels;
 
@@ -16,9 +17,9 @@ namespace DeepFocus.Views
             this.Loaded += StatisticsPage_Loaded;
         }
 
-        private void StatisticsPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void StatisticsPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.Initialize();
+            await ViewModel.LoadStatisticsAsync();
         }
     }
 }

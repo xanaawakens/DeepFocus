@@ -7,13 +7,13 @@ namespace DeepFocus.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (parameter is not string format)
+                return value?.ToString() ?? string.Empty;
+
             if (value == null)
                 return string.Empty;
 
-            if (parameter is string format)
-                return string.Format(format, value);
-
-            return value.ToString();
+            return string.Format(format, value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

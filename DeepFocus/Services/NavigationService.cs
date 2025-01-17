@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -8,18 +9,25 @@ namespace DeepFocus.Services
 {
     public class NavigationService : INavigationService
     {
+        private Frame? _frame;
         private readonly Dictionary<string, Type> _pages = new();
-        private Frame _frame;
+        public event EventHandler<string>? Navigated;
 
-        public event NavigatedEventHandler Navigated;
-
-        public Frame Frame
+        public Frame? Frame
         {
             get => _frame;
             set
             {
+                if (_frame == value)
+                    return;
+
+                if (_frame != null)
+                    _frame.Navigated -= OnNavigated;
+
                 _frame = value;
-                _frame.Navigated += Frame_Navigated;
+
+                if (_frame != null)
+                    _frame.Navigated += OnNavigated;
             }
         }
 
@@ -32,14 +40,25 @@ namespace DeepFocus.Services
 
         private void RegisterPages()
         {
-            _pages.Add("timer", typeof(MainPage));
-            _pages.Add("statistics", typeof(StatisticsPage));
-            _pages.Add("settings", typeof(SettingsPage));
+            RegisterPage("timer", typeof(MainPage));
+            RegisterPage("statistics", typeof(StatisticsPage));
+            RegisterPage("settings", typeof(SettingsPage));
+        }
+
+        public void RegisterPage(string key, Type pageType)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentException("Page key cannot be null or whitespace", nameof(key));
+
+            if (pageType == null)
+                throw new ArgumentNullException(nameof(pageType));
+
+            _pages[key] = pageType;
         }
 
         public bool GoBack()
         {
-            if (CanGoBack)
+            if (Frame != null && Frame.CanGoBack)
             {
                 Frame.GoBack();
                 return true;
@@ -47,18 +66,25 @@ namespace DeepFocus.Services
             return false;
         }
 
-        public bool NavigateTo(string pageKey, object parameter = null)
+        public bool NavigateTo(string pageKey, object? parameter = null)
         {
-            if (_pages.ContainsKey(pageKey))
-            {
-                return Frame.Navigate(_pages[pageKey], parameter);
-            }
-            return false;
+            if (_frame == null)
+                return false;
+
+            if (!_pages.TryGetValue(pageKey, out var pageType))
+                return false;
+
+            return _frame.Navigate(pageType, parameter);
         }
 
-        private void Frame_Navigated(object sender, NavigationEventArgs e)
+        private void OnNavigated(object sender, NavigationEventArgs e)
         {
-            Navigated?.Invoke(sender, e);
+            if (e.Content == null)
+                return;
+
+            var pageKey = _pages.FirstOrDefault(x => x.Value == e.Content.GetType()).Key;
+            if (!string.IsNullOrEmpty(pageKey))
+                Navigated?.Invoke(this, pageKey);
         }
     }
 }
