@@ -6,6 +6,9 @@ namespace DeepFocus.Models
     public partial class PomodoroSession : ObservableObject
     {
         [ObservableProperty]
+        private int id;
+
+        [ObservableProperty]
         private int duration;
 
         [ObservableProperty]
@@ -27,6 +30,9 @@ namespace DeepFocus.Models
             startTime = DateTime.Now;
             isCompleted = false;
         }
+
+        // Parameterless constructor for EF Core
+        protected PomodoroSession() { }
     }
 
     public enum SessionType
