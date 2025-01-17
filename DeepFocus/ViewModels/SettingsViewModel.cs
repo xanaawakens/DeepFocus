@@ -35,6 +35,9 @@ namespace DeepFocus.ViewModels
         private string selectedSound = "Default";
 
         [ObservableProperty]
+        private double notificationVolume = 1.0;
+
+        [ObservableProperty]
         private bool showToastNotifications = true;
 
         [ObservableProperty]
@@ -74,6 +77,7 @@ namespace DeepFocus.ViewModels
             // Load additional settings
             PlayNotificationSounds = _settingsService.PlayNotificationSounds;
             SelectedSound = _settingsService.NotificationSound;
+            NotificationVolume = _notificationService.Volume;
             ShowToastNotifications = _settingsService.ShowToastNotifications;
             AutoStartBreaks = _settingsService.AutoStartBreaks;
             AutoStartNextPomodoro = _settingsService.AutoStartNextPomodoro;
@@ -97,6 +101,7 @@ namespace DeepFocus.ViewModels
             // Save additional settings
             _settingsService.PlayNotificationSounds = PlayNotificationSounds;
             _settingsService.NotificationSound = SelectedSound;
+            _notificationService.Volume = NotificationVolume;
             _settingsService.ShowToastNotifications = ShowToastNotifications;
             _settingsService.AutoStartBreaks = AutoStartBreaks;
             _settingsService.AutoStartNextPomodoro = AutoStartNextPomodoro;
@@ -110,7 +115,7 @@ namespace DeepFocus.ViewModels
         {
             if (PlayNotificationSounds)
             {
-                _notificationService.PlaySound(SelectedSound);
+                _notificationService.PlaySound(SelectedSound, NotificationVolume);
             }
             if (ShowToastNotifications)
             {
@@ -127,6 +132,7 @@ namespace DeepFocus.ViewModels
             CyclesBeforeLongBreak = 4;
             PlayNotificationSounds = true;
             SelectedSound = AvailableSounds[0];
+            NotificationVolume = 1.0;
             ShowToastNotifications = true;
             AutoStartBreaks = false;
             AutoStartNextPomodoro = false;

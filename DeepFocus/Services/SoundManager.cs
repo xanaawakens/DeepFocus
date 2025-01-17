@@ -12,6 +12,7 @@ namespace DeepFocus.Services
     {
         private readonly Dictionary<string, MediaPlayer> _soundPlayers = new();
         private readonly string _soundsPath;
+        private double _volume = 1.0;
 
         public static readonly IReadOnlyList<string> AvailableSounds = new List<string>
         {
@@ -24,6 +25,16 @@ namespace DeepFocus.Services
             "Success",
             "Zen"
         };
+
+        public double Volume
+        {
+            get => _volume;
+            set
+            {
+                _volume = Math.Clamp(value, 0.0, 1.0);
+                UpdatePlayersVolume();
+            }
+        }
 
         public SoundManager()
         {
@@ -78,7 +89,8 @@ namespace DeepFocus.Services
                         var player = new MediaPlayer
                         {
                             Source = MediaSource.CreateFromUri(new Uri(filePath)),
-                            AudioCategory = MediaPlayerAudioCategory.Alerts
+                            AudioCategory = MediaPlayerAudioCategory.Alerts,
+                            Volume = _volume
                         };
                         _soundPlayers[sound] = player;
                     }
@@ -90,14 +102,32 @@ namespace DeepFocus.Services
             }
         }
 
-        public void PlaySound(string soundName)
+        private void UpdatePlayersVolume()
+        {
+            foreach (var player in _soundPlayers.Values)
+            {
+                player.Volume = _volume;
+            }
+        }
+
+        public void PlaySound(string soundName, double? volumeOverride = null)
         {
             if (_soundPlayers.TryGetValue(soundName, out var player))
             {
                 try
                 {
+                    if (volumeOverride.HasValue)
+                    {
+                        player.Volume = Math.Clamp(volumeOverride.Value, 0.0, 1.0);
+                    }
+
                     player.PlaybackSession.Position = TimeSpan.Zero;
                     player.Play();
+
+                    if (volumeOverride.HasValue)
+                    {
+                        player.Volume = _volume; // Reset to default volume after playing
+                    }
                 }
                 catch (Exception ex)
                 {

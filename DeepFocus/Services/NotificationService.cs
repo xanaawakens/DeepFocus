@@ -9,6 +9,12 @@ namespace DeepFocus.Services
         private readonly SoundManager _soundManager;
         private readonly AppNotificationManager _notificationManager;
 
+        public double Volume
+        {
+            get => _soundManager.Volume;
+            set => _soundManager.Volume = value;
+        }
+
         public NotificationService()
         {
             _soundManager = new SoundManager();
@@ -33,9 +39,9 @@ namespace DeepFocus.Services
             }
         }
 
-        public void PlaySound(string soundName)
+        public void PlaySound(string soundName, double? volumeOverride = null)
         {
-            _soundManager.PlaySound(soundName);
+            _soundManager.PlaySound(soundName, volumeOverride);
         }
 
         public string[] GetAvailableSounds()

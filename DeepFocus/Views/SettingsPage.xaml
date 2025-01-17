@@ -96,6 +96,19 @@
                             IsEnabled="{x:Bind ViewModel.PlayNotificationSounds, Mode=OneWay}"
                             MinWidth="200"/>
 
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Slider Header="Notification Volume"
+                                Value="{x:Bind ViewModel.NotificationVolume, Mode=TwoWay}"
+                                Minimum="0"
+                                Maximum="1"
+                                StepFrequency="0.1"
+                                Width="200"
+                                IsEnabled="{x:Bind ViewModel.PlayNotificationSounds, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind ViewModel.NotificationVolume, Mode=OneWay, Converter={StaticResource PercentageConverter}}"
+                                 VerticalAlignment="Bottom"
+                                 Margin="0,0,0,4"/>
+                    </StackPanel>
+
                     <ToggleSwitch Header="Show Toast Notifications"
                                 IsOn="{x:Bind ViewModel.ShowToastNotifications, Mode=TwoWay}"/>
 
