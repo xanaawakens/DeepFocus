@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DeepFocus.Views.StatisticsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d">
+
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Loading State -->
+        <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                      Width="50" Height="50"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Grid.RowSpan="3"/>
+
+        <!-- Summary Cards -->
+        <Grid Grid.Row="0" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Total Pomodoros -->
+            <Grid Background="{ThemeResource SurfaceBrush}" 
+                  Margin="4" Padding="16" 
+                  CornerRadius="8"
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel>
+                    <TextBlock Text="Total Pomodoros"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalPomodoros, Mode=OneWay}"
+                             Style="{ThemeResource TitleLargeTextBlockStyle}"
+                             Margin="0,4,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Total Minutes -->
+            <Grid Grid.Column="1" 
+                  Background="{ThemeResource SurfaceBrush}" 
+                  Margin="4" Padding="16"
+                  CornerRadius="8"
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel>
+                    <TextBlock Text="Total Hours Focused"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Summary.TotalMinutesFocused, Mode=OneWay, Converter={StaticResource MinutesToHoursConverter}}"
+                             Style="{ThemeResource TitleLargeTextBlockStyle}"
+                             Margin="0,4,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Current Streak -->
+            <Grid Grid.Column="2" 
+                  Background="{ThemeResource SurfaceBrush}" 
+                  Margin="4" Padding="16"
+                  CornerRadius="8"
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel>
+                    <TextBlock Text="Current Streak"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Summary.CurrentStreak, Mode=OneWay}"
+                             Style="{ThemeResource TitleLargeTextBlockStyle}"
+                             Margin="0,4,0,0"/>
+                    <TextBlock Text="days"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Best Day -->
+            <Grid Grid.Column="3" 
+                  Background="{ThemeResource SurfaceBrush}" 
+                  Margin="4" Padding="16"
+                  CornerRadius="8"
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel>
+                    <TextBlock Text="Most Productive Day"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Summary.MostProductiveDay, Mode=OneWay, Converter={StaticResource DateToShortDateConverter}}"
+                             Style="{ThemeResource TitleLargeTextBlockStyle}"
+                             Margin="0,4,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.Summary.MostPomodorosInDay, Mode=OneWay, StringFormat='{}{0} pomodoros'}"
+                             Style="{ThemeResource CaptionTextBlockStyle}"
+                             Foreground="{ThemeResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Weekly Chart -->
+        <Grid Grid.Row="1" 
+              Background="{ThemeResource SurfaceBrush}"
+              Margin="0,0,0,24"
+              Padding="16"
+              CornerRadius="8"
+              BorderThickness="1"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="300"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="This Week's Progress"
+                     Style="{ThemeResource SubtitleTextBlockStyle}"
+                     Margin="0,0,0,16"/>
+
+            <controls:CartesianChart Grid.Row="1"
+                                   XAxisTitle="Day"
+                                   YAxisTitle="Pomodoros"
+                                   Series="{x:Bind ViewModel.WeeklyStats.PomodorosByDay, Mode=OneWay}"/>
+        </Grid>
+
+        <!-- Daily Stats List -->
+        <ListView Grid.Row="2"
+                  ItemsSource="{x:Bind ViewModel.DailyStats, Mode=OneWay}"
+                  Background="{ThemeResource SurfaceBrush}"
+                  CornerRadius="8"
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:DailyStatistics">
+                    <Grid Padding="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{x:Bind Date, Converter={StaticResource DateToShortDateConverter}}"
+                                 Style="{ThemeResource BodyTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
+                            <TextBlock Text="{x:Bind CompletedPomodoros, StringFormat='{}{0} pomodoros'}"
+                                     Style="{ThemeResource BodyTextBlockStyle}"/>
+                            <TextBlock Text="{x:Bind TotalMinutesFocused, StringFormat='{}{0} minutes'}"
+                                     Style="{ThemeResource BodyTextBlockStyle}"
+                                     Foreground="{ThemeResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Column="2" 
+                                 Glyph="&#xE76C;"
+                                 Visibility="{x:Bind CompletedPomodoros, Converter={StaticResource GreaterThanZeroToVisibilityConverter}}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
