@@ -53,7 +53,7 @@ DeepFocus is a modern, feature-rich Pomodoro timer application built with WinUI 
 
 3. Clone the repository:
 ```bash
-git clone git@github.com:avixiii-dev/DeepFocus.git
+git clone git@github.com:xanaawakens/DeepFocus.git
 ```
 
 4. Open `DeepFocus.sln` in Visual Studio
